@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-     <div><strong>Utilisateur connecté : {{current_user}}</strong></div>
+     <div><strong>Utilisateur connecté : {{currentUser}}</strong></div>
     <utilisateur :utilisateurs="utilisateurs" @selected_utilisateur="selected"/>
     <div v-if="loading">Loading TOTO</div>
     <div v-else>
-    <feed :tweets="tweets"  @retweeted="retweet"/>
+    <feed :tweets="tweets"  :currentUser="currentUser" @retweeted="retweet"/>
     </div>
    </div>
 
@@ -41,12 +41,12 @@ export default {
     //alert(id);
     var i;
     for(i=0; i<this.tweets.length; i++){
-      if(this.tweets[i].id == id){this.tweets[i].retweeters.push("Lulu");}
+      if(this.tweets[i].id == id){this.tweets[i].retweeters.push({handle:this.currentUser});}
     }
     //this.fetchTweets()
    },
    selected: function(select){
-    this.current_user = select;
+    this.currentUser = select;
     //alert(current_user)
    },
   fetchUtilisateurs : function (){
@@ -65,7 +65,7 @@ export default {
       loading : true,
       tweets: [],
       utilisateurs: [],
-      current_user: ""
+      currentUser: "Anonyme"
     }
   },
   created () {

@@ -5,8 +5,8 @@
   <div>contenu :{{tweet.contenu}}<br><br></div>
   <div><ul>
   <li class="button"><icon name="reply"/></li>
-  <a @click="retweet(tweet.id)"><li class="button" ><icon name="retweet"/></li></a><span class="aside">{{tweet.retweeters.length}}</span>
-
+  <li v-if="isRt()" class="button" ><icon name="retweet"/><span class="aside">{{tweet.retweeters.length}}</span></li>
+  <li v-else class="button" ><a @click="retweet(tweet.id)"><icon name="retweet"/><span class="aside">{{tweet.retweeters.length}}</span></a></li>
   <li class="button"><icon name="heart"/></li>
   <li class="button"><icon name="envelope"/></li>
   </ul></div>
@@ -23,9 +23,15 @@ import Icon from 'vue-awesome/components/Icon'
 import moment from 'moment'
 export default {
   name: 'tweet',
-  props: ['tweet'],
+  props: ['tweet','currentUser'],
   components: {Icon, moment},
   methods:{
+    isRt: function(){
+    console.log("CURRENT USER : "+this.currentUser)
+    var rter = this.tweet.retweeters.find(retweeter => retweeter.handle === this.currentUser);
+    console.log(rter);
+    return rter != undefined
+    },
     moment: function(date){
     return moment(date);
     },
@@ -35,7 +41,7 @@ export default {
      retweet : function(id){
 
       var body = new FormData();
-      body.append("utilisateur","Lulu");
+      body.append("utilisateur", this.currentUser);
       body.append("tweet",id);
        this.$http.post('http://localhost:8080/retweet',body).then(response => {
          console.log(response);
