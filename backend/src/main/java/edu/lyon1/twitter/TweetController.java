@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 public class TweetController {
 
@@ -30,14 +28,14 @@ public class TweetController {
     }
 
     @RequestMapping("/list")
-    public List<Tweet> list(@RequestParam(name = "auteur", required = false) Optional<String> auteur) {
+    public List<Tweet> list(@RequestParam(name = "auteur", required = false) Optional<Utilisateur> auteur) {
         return auteur
                 .map(a -> tweetRepository.findAllByAuteurOrderByDateDesc(a))
                 .orElseGet(() -> tweetRepository.findAllByOrderByDateDesc());
     }
 
     @RequestMapping("/tweet")
-    public void tweet(@RequestParam("auteur") String auteur, @RequestParam("contenu") String contenu) {
+    public void tweet(@RequestParam("auteur") Utilisateur auteur, @RequestParam("contenu") String contenu) {
         tweetRepository.save(new Tweet(contenu, auteur));
     }
 
@@ -65,6 +63,5 @@ public class TweetController {
     public Tweet detailedTweet(@PathVariable("id") Integer id) {
         return tweetRepository.findOne(id);
     }
-
 
 }

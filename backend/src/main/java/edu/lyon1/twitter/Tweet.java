@@ -11,26 +11,31 @@ public class Tweet {
     private Integer id;
     private Timestamp date;
     private String contenu;
-    private String auteur;
+    @ManyToOne
+    @JoinColumn(
+            name="auteur"
+    )
+    private Utilisateur auteur;
     @OneToMany
     @JoinTable(
             name="retweets",
             joinColumns = @JoinColumn( name="tweet"),
             inverseJoinColumns = @JoinColumn( name="utilisateur")
     )
+
     private Collection<Utilisateur> retweeters;
 
     public Tweet() {
     }
 
-    public Tweet(Integer id, Timestamp date, String contenu, String auteur) {
+    public Tweet(Integer id, Timestamp date, String contenu, Utilisateur auteur) {
         this.id = id;
         this.date = date;
         this.contenu = contenu;
         this.auteur = auteur;
     }
 
-    public Tweet(String contenu, String auteur) {
+    public Tweet(String contenu, Utilisateur auteur) {
         this.contenu = contenu;
         this.auteur = auteur;
     }
@@ -47,7 +52,7 @@ public class Tweet {
         return contenu;
     }
 
-    public String getAuteur() {
+    public Utilisateur getAuteur() {
         return auteur;
     }
 
@@ -63,7 +68,7 @@ public class Tweet {
         this.contenu = contenu;
     }
 
-    public void setAuteur(String auteur) {
+    public void setAuteur(Utilisateur auteur) {
         this.auteur = auteur;
     }
 
